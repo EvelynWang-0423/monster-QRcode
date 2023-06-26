@@ -127,23 +127,14 @@ model used: https://huggingface.co/monster-labs/control_v1p_sd15_qrcode_monster
 
 Welcome to the QR Code Monster!
 
-## Parameters
+**TLDR:**
 
-- **Input Text:** The text you want to encode into the QR code
-- **Prompt:** Input a prompt to guide the QR code generation process, allowing you to control the appearance and style of the generated QR codes. Some are easier than others to generate readable QR codes.
-- **Controlnet Control Scale:** Raise the control scale value to increase the readability of the QR codes or lower it to make the QR codes more creative and distinctive.
+Input your text, choose a prompt, and generate a QR code!
+The Controlnet Conditioning Scale parameter controls the readability/creativity of the QR code. Lower values will generate more creative QR codes, higher values will generate more readable QR codes.
 
-The generated QR codes might not always be easily readable. It might take a few tries with different parameters to find the right balance. This often depends on the prompt, which can be more or less suitable for QR code generation.
 
-We're already working on v2, which is much more powerful, you can try [an early version here](https://qrcodemonster.art)!
+More instructions at the bottom of the page.
 
-## How to Use
-
-1. Input your text: Pass the text you'd like to encode into the QR code as input. Bigger text means bigger codes, which are less likely to give good results (will ressemble qr codes too much).
-2. Set your prompt: Choose a prompt to guide the generation process (use all the SD tricks you like: styles, adjectives...). 
-3. Adjust the Controlnet Control Scale: The higher the control scale, the more readable the QR code will be, while a lower control scale leads to a more creative QR code.
-4. Generate multiple codes: Since not all generated codes may be readable, you'll need to create a few codes with the same parameters to determine if any adjustments are needed.
-5. Test the generated QR codes: Scan the generated QR codes to make sure they are readable and meet your requirements.
 """
     )
 
@@ -269,6 +260,27 @@ We're already working on v2, which is much more powerful, you can try [an early 
         ],
         outputs=[result_image],
         cache_examples=True,
+    )
+    gr.Markdown(
+        """
+## Parameters
+
+- **Input Text:** The text you want to encode into the QR code
+- **Prompt:** Input a prompt to guide the QR code generation process, allowing you to control the appearance and style of the generated QR codes. Some are easier than others to generate readable QR codes.
+- **Controlnet Control Scale:** Raise the control scale value to increase the readability of the QR codes or lower it to make the QR codes more creative and distinctive.
+
+The generated QR codes might not always be easily readable. It might take a few tries with different parameters to find the right balance. This often depends on the prompt, which can be more or less suitable for QR code generation.
+
+We're already working on v2, which is much more powerful, you can try [an early version here](https://qrcodemonster.art)!
+
+## How to Use
+
+1. Input your text: Pass the text you'd like to encode into the QR code as input. Bigger text means bigger codes, which are less likely to give good results (will ressemble qr codes too much).
+2. Set your prompt: Choose a prompt to guide the generation process (use all the SD tricks you like: styles, adjectives...).
+3. Adjust the Controlnet Control Scale: The higher the control scale, the more readable the QR code will be, while a lower control scale leads to a more creative QR code.
+4. Generate multiple codes: Since not all generated codes may be readable, you'll need to create a few codes with the same parameters to determine if any adjustments are needed.
+5. Test the generated QR codes: Scan the generated QR codes to make sure they are readable and meet your requirements.
+"""
     )
 
 blocks.queue(concurrency_count=1, max_size=20)
