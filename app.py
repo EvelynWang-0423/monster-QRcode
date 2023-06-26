@@ -77,7 +77,7 @@ def inference(
     guidance_scale: float = 10.0,
     controlnet_conditioning_scale: float = 2.0,
     seed: int = -1,
-    sampler="DPM++ Karras SDE",
+    sampler="Euler a",
 ):
     if prompt is None or prompt == "":
         raise gr.Error("Prompt is required")
@@ -99,15 +99,14 @@ def inference(
         prompt=prompt,
         negative_prompt=negative_prompt,
         image=qrcode_image,
-        width=qrcode_image.width,  # type: ignore
-        height=qrcode_image.height,  # type: ignore
+        width=qrcode_image.width,
+        height=qrcode_image.height,
         guidance_scale=float(guidance_scale),
-        controlnet_conditioning_scale=float(
-            controlnet_conditioning_scale),  # type: ignore
+        controlnet_conditioning_scale=float(controlnet_conditioning_scale),
         generator=generator,
         num_inference_steps=40,
     )
-    return out.images[0]  # type: ignore
+    return out.images[0]
 
 
 css = """
@@ -167,7 +166,6 @@ Try our more powerful v2 here: https://qrcodemonster.art!
                     value=1.5,
                     label="Controlnet Conditioning Scale",
                     info="""Controls the readability/creativity of the QR code.
-                    
                     High values: The generated QR code will be more readable.
                     Low values: The generated QR code will be more creative.
                     """
@@ -194,8 +192,7 @@ Try our more powerful v2 here: https://qrcodemonster.art!
             with gr.Row():
                 run_btn = gr.Button("Run")
         with gr.Column():
-            result_image = gr.Image(
-                label="Result Image", elem_id="result_image")
+            result_image = gr.Image(label="Result Image", elem_id="result_image")
     run_btn.click(
         inference,
         inputs=[
@@ -213,7 +210,7 @@ Try our more powerful v2 here: https://qrcodemonster.art!
     gr.Examples(
         examples=[
             [
-                "https://qrcodemonster.art",
+                "test",
                 "Baroque rococo architecture, architectural photography, post apocalyptic New York, hyperrealism, [roots], hyperrealistic, octane render, cinematic, hyper detailed, 8K",
                 "",
                 7,
@@ -231,7 +228,7 @@ Try our more powerful v2 here: https://qrcodemonster.art!
                 "Euler a",
             ],
             [
-                "https://qrcodemonster.art",
+                "test",
                 "3 cups of coffee with coffee beans around",
                 "",
                 7,
@@ -249,7 +246,7 @@ Try our more powerful v2 here: https://qrcodemonster.art!
                 "Euler a",
             ],
             [
-                "https://qrcodemonster.art",
+                "test",
                 "A top view picture of a sandy beach, organic shapes, beautiful lighting, bumps and shadows, 8k, highly detailed",
                 "sky, water, squares",
                 7,
@@ -275,9 +272,9 @@ Try our more powerful v2 here: https://qrcodemonster.art!
         """
 ## Notes
 
-* The generated QR codes may not always be easily readable and may require adjusting the parameters. 
+* The generated QR codes may not always be easily readable and may require adjusting the parameters.
 * The prompt affects the quality of the generated QR code.
-* The scan may work better if the phone is held further away from the screen. 
+* The scan may work better if the phone is held further away from the screen, or if the page is zoomed out.
 
 ## Parameters
 
