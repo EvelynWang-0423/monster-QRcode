@@ -182,7 +182,7 @@ We're already working on v2, which is much more powerful, you can try [an early 
                     value=7,
                     label="Guidance Scale",
                 )
-                sampler = gr.Dropdown(choices=list(SAMPLER_MAP.keys()), value="DPM++ Karras SDE", label="Sampler")
+                sampler = gr.Dropdown(choices=list(SAMPLER_MAP.keys()), value="Euler a", label="Sampler")
                 seed = gr.Number(
                     minimum=-1,
                     maximum=9999999999,
