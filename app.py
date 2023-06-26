@@ -42,6 +42,7 @@ SAMPLER_MAP = {
     "DEIS": lambda config: DEISMultistepScheduler.from_config(config),
 }
 
+
 def create_code(content: str):
     qr = qrcode.QRCode(
         version=1,
@@ -63,9 +64,11 @@ def create_code(content: str):
     bg = Image.new('L', (w, h), 255)
 
     # align on 16px grid
-    coords = ((w - img.size[0]) // 2 // 16 * 16, (h - img.size[1]) // 2 // 16 * 16)
+    coords = ((w - img.size[0]) // 2 // 16 * 16,
+              (h - img.size[1]) // 2 // 16 * 16)
     bg.paste(img, coords)
     return bg
+
 
 def inference(
     qr_code_content: str,
@@ -74,7 +77,7 @@ def inference(
     guidance_scale: float = 10.0,
     controlnet_conditioning_scale: float = 2.0,
     seed: int = -1,
-    sampler = "DPM++ Karras SDE",
+    sampler="DPM++ Karras SDE",
 ):
     if prompt is None or prompt == "":
         raise gr.Error("Prompt is required")
@@ -99,11 +102,13 @@ def inference(
         width=qrcode_image.width,  # type: ignore
         height=qrcode_image.height,  # type: ignore
         guidance_scale=float(guidance_scale),
-        controlnet_conditioning_scale=float(controlnet_conditioning_scale),  # type: ignore
+        controlnet_conditioning_scale=float(
+            controlnet_conditioning_scale),  # type: ignore
         generator=generator,
         num_inference_steps=40,
     )
     return out.images[0]  # type: ignore
+
 
 css = """
 #result_image {
@@ -122,27 +127,22 @@ with gr.Blocks(css=css) as blocks:
     gr.Markdown(
         """
 # QR Code Monster v1.0
+## QR Code AI Art Generator
 
-model used: https://huggingface.co/monster-labs/control_v1p_sd15_qrcode_monster
+Model used: https://huggingface.co/monster-labs/control_v1p_sd15_qrcode_monster
 
-Welcome to the QR Code Monster!
+Try our more powerful v2 here: https://qrcodemonster.art!
 
-**TLDR:**
-
-Input your text, choose a prompt, and generate a QR code!
-The Controlnet Conditioning Scale parameter controls the readability/creativity of the QR code. Lower values will generate more creative QR codes, higher values will generate more readable QR codes.
-
-
-More instructions at the bottom of the page.
-
+<a href="https://huggingface.co/spaces/monster-labs/Controlnet-QRCode-Monster-V1?duplicate=true" style="display: inline-block;margin-top: .5em;margin-right: .25em;" target="_blank">
+<img style="margin-bottom: 0em;display: inline;margin-top: -.25em;" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a> for no queue on your own hardware.</p>
 """
     )
 
     with gr.Row():
         with gr.Column():
             qr_code_content = gr.Textbox(
-                label="QR Code Content",
-                info="QR Code Content or URL",
+                label="QR Code Content or URL",
+                info="The text you want to encode into the QR code",
                 value="",
             )
 
@@ -153,6 +153,7 @@ More instructions at the bottom of the page.
             negative_prompt = gr.Textbox(
                 label="Negative Prompt",
                 value="ugly, disfigured, low quality, blurry, nsfw",
+                info="Prompt that guides the generation away from",
             )
 
             with gr.Accordion(
@@ -165,6 +166,11 @@ More instructions at the bottom of the page.
                     step=0.01,
                     value=1.5,
                     label="Controlnet Conditioning Scale",
+                    info="""Controls the readability/creativity of the QR code.
+                    
+                    High values: The generated QR code will be more readable.
+                    Low values: The generated QR code will be more creative.
+                    """
                 )
                 guidance_scale = gr.Slider(
                     minimum=0.0,
@@ -172,8 +178,10 @@ More instructions at the bottom of the page.
                     step=0.25,
                     value=7,
                     label="Guidance Scale",
+                    info="Controls the amount of guidance the text prompt guides the image generation"
                 )
-                sampler = gr.Dropdown(choices=list(SAMPLER_MAP.keys()), value="Euler a", label="Sampler")
+                sampler = gr.Dropdown(choices=list(
+                    SAMPLER_MAP.keys()), value="Euler a", label="Sampler")
                 seed = gr.Number(
                     minimum=-1,
                     maximum=9999999999,
@@ -181,11 +189,13 @@ More instructions at the bottom of the page.
                     value=2313123,
                     label="Seed",
                     randomize=True,
+                    info="Seed for the random number generator. Set to -1 for a random seed"
                 )
             with gr.Row():
                 run_btn = gr.Button("Run")
         with gr.Column():
-            result_image = gr.Image(label="Result Image", elem_id="result_image")
+            result_image = gr.Image(
+                label="Result Image", elem_id="result_image")
     run_btn.click(
         inference,
         inputs=[
@@ -203,7 +213,7 @@ More instructions at the bottom of the page.
     gr.Examples(
         examples=[
             [
-                "test",
+                "https://qrcodemonster.art",
                 "Baroque rococo architecture, architectural photography, post apocalyptic New York, hyperrealism, [roots], hyperrealistic, octane render, cinematic, hyper detailed, 8K",
                 "",
                 7,
@@ -212,7 +222,7 @@ More instructions at the bottom of the page.
                 "Euler a",
             ],
             [
-                "test",
+                "https://qrcodemonster.art",
                 "a centered render of an ancient tree covered in bio - organic micro organisms growing in a mystical setting, cinematic, beautifully lit, by tomasz alen kopera and peter mohrbacher and craig mullins, 3d, trending on artstation, octane render, 8k",
                 "",
                 7,
@@ -221,7 +231,7 @@ More instructions at the bottom of the page.
                 "Euler a",
             ],
             [
-                "test",
+                "https://qrcodemonster.art",
                 "3 cups of coffee with coffee beans around",
                 "",
                 7,
@@ -230,7 +240,7 @@ More instructions at the bottom of the page.
                 "Euler a",
             ],
             [
-                "sd is cool",
+                "https://huggingface.co",
                 "A top view picture of a sandy beach with a sand castle, beautiful lighting, 8k, highly detailed",
                 "sky",
                 7,
@@ -239,7 +249,7 @@ More instructions at the bottom of the page.
                 "Euler a",
             ],
             [
-                "test",
+                "https://qrcodemonster.art",
                 "A top view picture of a sandy beach, organic shapes, beautiful lighting, bumps and shadows, 8k, highly detailed",
                 "sky, water, squares",
                 7,
@@ -263,6 +273,12 @@ More instructions at the bottom of the page.
     )
     gr.Markdown(
         """
+## Notes
+
+* The generated QR codes may not always be easily readable and may require adjusting the parameters. 
+* The prompt affects the quality of the generated QR code.
+* The scan may work better if the phone is held further away from the screen. 
+
 ## Parameters
 
 - **Input Text:** The text you want to encode into the QR code
@@ -271,7 +287,6 @@ More instructions at the bottom of the page.
 
 The generated QR codes might not always be easily readable. It might take a few tries with different parameters to find the right balance. This often depends on the prompt, which can be more or less suitable for QR code generation.
 
-We're already working on v2, which is much more powerful, you can try [an early version here](https://qrcodemonster.art)!
 
 ## How to Use
 
@@ -283,5 +298,5 @@ We're already working on v2, which is much more powerful, you can try [an early 
 """
     )
 
-blocks.queue(concurrency_count=1, max_size=20)
-blocks.launch(share=bool(os.environ.get("SHARE", False)))
+blocks.queue(concurrency_count=1, max_size=20, api_open=False)
+blocks.launch(share=bool(os.environ.get("SHARE", False)), show_api=False)
