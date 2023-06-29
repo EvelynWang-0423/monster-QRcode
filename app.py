@@ -61,7 +61,7 @@ def create_code(content: str):
     h = (h + 255 + offset_min) // 256 * 256
     if w > 1024:
         raise gr.Error("QR code is too large, please use a shorter content")
-    bg = Image.new('L', (w, h), 255)
+    bg = Image.new('L', (w, h), 128)
 
     # align on 16px grid
     coords = ((w - img.size[0]) // 2 // 16 * 16,
