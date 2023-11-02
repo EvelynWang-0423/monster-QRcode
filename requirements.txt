@@ -1,7 +1,7 @@
 diffusers
 transformers
 accelerate
-torch
+torch==2.0.0
 xformers
 gradio
 Pillow
