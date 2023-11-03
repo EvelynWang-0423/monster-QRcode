@@ -1,4 +1,5 @@
 import torch
+import random
 import gradio as gr
 from PIL import Image
 import qrcode
@@ -186,7 +187,7 @@ Try our more powerful v2 here: https://qrcodemonster.art!
                     step=1,
                     value=2313123,
                     label="Seed",
-                    randomize=True,
+                    # randomize=True,
                     info="Seed for the random number generator. Set to -1 for a random seed"
                 )
             with gr.Row():
